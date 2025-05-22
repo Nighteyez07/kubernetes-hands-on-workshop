@@ -1,26 +1,23 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 
+WORKDIR /src
 
-# TODO: add the Docker commands to do these build steps:
+COPY backend.csproj .
 
-# set the current directory to `/src`
-# copy the manifest file: backend.csproj
-# from a shell, run `dotnet restore`
-# copy the source files into place
-# from a shell, run `dotnet build -c Release`
-# from a shell, run `dotnet publish -c Release -o /app`
+RUN dotnet restore
 
+COPY . .
+
+RUN dotnet build -c Release
+RUN dotnet publish -c Release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine
 
-ENV ASPNETCORE_URLS http://+:5000
+ENV ASPNETCORE_URLS=http://+:5000
 EXPOSE 5000
 
+WORKDIR /app
 
-# TODO: add the Docker commands to do these image build and container run steps:
+COPY --from=build /app .
 
-# set the current directory to `/app`
-# copy the content from the app folder on the build stage above
-
-# as the container starts:
-# `dotnet backend.dll`
+CMD ["dotnet", "backend.dll"]
