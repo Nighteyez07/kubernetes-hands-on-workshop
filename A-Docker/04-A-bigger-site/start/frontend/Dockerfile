@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:alpine AS final
 
 ENV NODE_ENV=production
 ENV PORT=3000

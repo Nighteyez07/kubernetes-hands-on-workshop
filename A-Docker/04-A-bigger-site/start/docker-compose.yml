@@ -1,0 +1,53 @@
+name: "kubernetes-bootcamp"
+
+services:
+  backend:
+    container_name: backend
+    image: backend:01
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: final
+    ports:
+      - "5000:5000"
+  frontend:
+    container_name: frontend
+    image: frontend:01
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: final
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
