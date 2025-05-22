@@ -7,7 +7,13 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install
+# at build time:
+# set the current directory to `/app` or any convinient name
+# copy the manifest file: package.json into this directory
+# from a shell, run `npm install`
+# copy the content into place
+# let traffic flow in on port 3000
+# set the environment variable `BACKEND` to `http://backend:5000`
 
 COPY . .
 
