@@ -4,7 +4,12 @@ WORKDIR /src
 
 COPY backend.csproj .
 
-RUN dotnet restore
+# set the current directory to `/src`
+# copy the manifest file: backend.csproj into this directory
+# from a shell, run `dotnet restore`
+# copy the source files into place
+# from a shell, run `dotnet build -c Release`
+# from a shell, run `dotnet publish -c Release -o /app`
 
 COPY . .
 
