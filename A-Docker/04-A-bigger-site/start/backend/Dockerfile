@@ -16,7 +16,7 @@ COPY . .
 RUN dotnet build -c Release
 RUN dotnet publish -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine as final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
 
 ENV ASPNETCORE_URLS=http://+:5000
 EXPOSE 5000
